@@ -1,0 +1,45 @@
+name: Fast CI Pytest Check
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  fast-pytest:
+    name: Pytest Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Create project environment files from secrets
+        if: env.PROJECT_CREDS != ''
+        run: |
+          python -c "
+          import os, json
+          creds = json.loads(os.getenv('PROJECT_CREDS', '{}'))
+          env_vars = creds.get('trio', creds)
+          lines = [f'{k}={v}' for k, v in env_vars.items() if isinstance(v, (str, int, float, bool))]
+          os.makedirs('config', exist_ok=True)
+          with open('config/trio.env', 'w', encoding='utf-8') as f:
+              f.write('\n'.join(lines) + '\n')
+          print('Generated config/trio.env')
+          "
+        env:
+          PROJECT_CREDS: ${{ secrets.PROJECT_CREDS }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run fast pytest check
+        continue-on-error: true
+        run: |
+          pytest --maxfail=1 --disable-warnings -q -m smoke

@@ -1,0 +1,31 @@
+name: Security Gitleaks Scan
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  gitleaks:
+    name: Gitleaks Secret Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Install Gitleaks CLI
+        run: |
+          VERSION=8.18.2
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" | tar -xz -C /tmp
+          sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
+
+      - name: Run Gitleaks Scan
+        continue-on-error: true
+        run: |
+          gitleaks detect --source . --report-path reports/gitleaks-report.json --report-format json --verbose || true

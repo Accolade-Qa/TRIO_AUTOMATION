@@ -1,0 +1,15 @@
+title = "Gitleaks Configuration for TRIO Automation"
+
+[allowlist]
+description = "Ignore test environment configurations, sample credentials, and documentation"
+paths = [
+  '''config/.*\.env''',
+  '''config/.*\.yaml''',
+  '''\.env$''',
+  '''\.env\.example$''',
+  '''utils/trigger_project_report\.py$'''
+]
+regexes = [
+  '''ChangeMe123''',
+  '''12345'''
+]

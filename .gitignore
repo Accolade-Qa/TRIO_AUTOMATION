@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+
+.env
+config/*.env
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Misc
+*.swp
+*.swo
+*~
+
+Artifacts/
+Reports/
+
+# Claude code files
+CLAUDE.local.md
+.claude/settings.local.json
+
+graphify-out/
+jmx/
+
+secret.txt
+bandit_report.html
+email_body.html
+Automation_ROI_.pptx
